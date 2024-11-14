@@ -1,0 +1,52 @@
+{% extends 'apps/operators/operator_base.html' %}
+
+{% block content %}
+
+    {% for order in orders %}
+        <div class="card border-dark mt-5">
+            <div class="card-body">
+                {% if order.operator %}
+                    <span style="position: absolute; right: 0px; border: 1px solid chartreuse;
+                 background: chartreuse; padding: 15px; font-size: 26px; font-weight: 700;">
+                    #{{ order.operator.id }}</span>
+                {% endif %}
+                <h2 class="card-title">{{ order.product.name }} - {{ order.price }} so'm</h2>
+                <ul class="text-muted">
+                    <li class="">Client: - {{ order.phone_number }}</li>
+                    <li class="">Address: Viloyatni tanlang</li>
+                    <li class="">
+                        Narxi: {{ order.price }} so'm
+                        <strong>+ 30000</strong> so'm
+
+                    </li>
+                    <li class="">Dostavka narxi:
+                        30000 so'm
+                    </li>
+                    <li class="">Soni: 1ta</li>
+                    {% if order.comment %}
+                        <li class="">{{ order.comment }}</li>
+                    {% endif %}
+                    <li class="">ID: #{{ order.id }}</li>
+                    {% if order.delivered_time %}
+                        <li class="">Vaqti:{{ order.delivered_time }}</li>
+                    {% endif %}
+                    {% if order.update_at %}
+                        <li class="">Yangilangan vaqti: {{ order.update_at }}</li>
+                    {% endif %}
+                </ul>
+                {% if 'new' in request.path %}
+                    {% if order.operator is  None or order.operator.id == user.id %}
+                        <a href="{% url 'order-update' order.id %}" class="btn btn-primary">Qabul qilish</a>
+                    {% endif %}
+                {% elif 'all' in request.path %}
+                {% else %}
+                    {% if order.operator.id == user.id %}
+                        <a href="{% url 'order-update' order.id %}" class="btn btn-primary">Holatini o'zgartirish</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    
+    {% include 'apps/parts/_pagination.html' %}
+{% endblock %}
